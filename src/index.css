@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  /* 1. Paleta general de marca */
+  --color-brand-midnight: #031B45;
+  --color-brand-salmon: #F5B2B5;
+  --color-brand-steel: #4E7CAD;
+  --color-brand-glacier: #B9D8E1;
+  --color-brand-steelLight: #629BB5;
+  --color-brand-bgApp: #F5EFEB;
+  --color-brand-sidebar: #2F4156;
+
+  /* 2. Estados e indicadores */
+  --color-status-success: #5BDF1E;
+  --color-status-error: #EF4444;
+  --color-status-warning: #F59E0B;
+  --color-status-info: #6271E6;
+
+  /* 3. Tipo de archivo / formato */
+  --color-fileType-pdf: #86B3E3;
+  --color-fileType-video: #9D8DF1;
+  --color-fileType-audio: #62EEC5;
+  --color-fileType-image: #FFD36C;
+
+  /* 4. Tipo de habilidad */
+  --color-skill-reading: #4ECDC4;
+  --color-skill-writing: #FF9900;
+  --color-skill-listening: #F48CAF;
+  --color-skill-speaking: #A78BFA;
+
+  /* 5. Otros estados */
+  --color-neutral-inactive: #D9D9D9;
+
+  /* Botones */
+  --color-button-pressed: #1B4786;
+  --color-button-hover: #3986D2;
+  --color-button-DEFAULT: #4B88D2;
+
+  /* Cards aleatorias (clases/grupos/unidades) */
+  --color-cardColor-skyBlue: #CAF3F5;
+  --color-cardColor-celeste: #77E1FF;
+  --color-cardColor-lavender: #AF8BD7;
+  --color-cardColor-mint: #85F4C4;
+}
