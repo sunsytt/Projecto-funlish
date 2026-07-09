@@ -1,16 +1,19 @@
-# React + Vite
+# Funlish
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Funlish es una plataforma web de reforzamiento para la enseñanza de inglés
+universitario. Centraliza el material de estudio, las actividades interactivas
+y el seguimiento académico en un solo lugar.
 
-Currently, two official plugins are available:
+- El **docente** organiza contenidos por unidades, crea actividades mediante
+  plantillas y da seguimiento al rendimiento de sus grupos.
+- El **alumno** practica de forma individual, acumula puntos por habilidad
+  (reading, writing, listening, speaking) y compite en un ranking grupal.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tecnologías
+- Frontend: React + Tailwind CSS + Vite
+- Backend / Base de datos: *(agregar lo que use tu compañera)*
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Roles del equipo
+- Frontend — Interfaz de alumno: *(tu nombre)*
+- Frontend — Interfaz de docente: *(nombre de tu compañera)*
+- Backend / Base de datos: *(nombre de tu compañera)*

@@ -1,9 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight, LogOut } from "lucide-react";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function TopBar({ tituloDefault = "" }) {
   const { breadcrumb } = useBreadcrumb();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  function manejarCerrarSesion() {
+    logout();
+    navigate("/login", { replace: true });
+  }
 
   return (
     <header className="h-20 w-full bg-brand-sidebar flex items-center justify-between px-8 shrink-0">
@@ -21,13 +29,7 @@ export default function TopBar({ tituloDefault = "" }) {
                     {item.label}
                   </Link>
                 ) : (
-                  <span
-                    className={
-                      esUltimo
-                        ? "text-2xl font-bold"
-                        : "text-2xl font-bold text-white/60"
-                    }
-                  >
+                  <span className={esUltimo ? "text-2xl font-bold" : "text-2xl font-bold text-white/60"}>
                     {item.label}
                   </span>
                 )}
@@ -40,7 +42,10 @@ export default function TopBar({ tituloDefault = "" }) {
         )}
       </div>
 
-      <button className="flex items-center gap-2 text-white hover:text-white transition-colors text-sm font-medium">
+      <button
+        onClick={manejarCerrarSesion}
+        className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity text-sm font-medium"
+      >
         Cerrar sesión
         <LogOut size={16} />
       </button>
