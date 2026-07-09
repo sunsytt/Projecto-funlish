@@ -16,4 +16,7 @@ y el seguimiento académico en un solo lugar.
 ## Roles del equipo
 - Frontend — Interfaz de alumno: *(tu nombre)*
 - Frontend — Interfaz de docente: *(nombre de tu compañera)*
+
+- Backend / Base de datos: *(nombre de tu compañera)*
+
 - Backend / Base de datos: *(nombre de tu compañera)*
