@@ -1,18 +1,23 @@
 import Sidebar from "./Sidebar";
-import TopBar from "./TopBar";
+import Breadcrumb from "../ui/Breadcrumb";
+import { usePageHeader } from "../../context/PageHeaderContext";
+import { LogOut } from "lucide-react";
 
 export default function PageLayout({ children }) {
+  const { items } = usePageHeader();
+
   return (
-    // Fondo navy de pantalla completa: el Sidebar y el TopBar son del mismo
-    // color, así que se funden con este fondo y solo el panel de contenido
-    // (más abajo) queda "flotando" encima con esquinas redondeadas.
-    <div className="flex h-screen bg-brand-sidebar">
+    <div className="flex min-h-screen bg-brand-sidebar">
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar />
-        {/* mx-4 mb-4 deja ver el navy de fondo a los lados y abajo;
-            sin margen arriba porque ya está pegado al TopBar (mismo color) */}
-        <main className="flex-1 overflow-y-auto bg-brand-bgApp rounded-3xl mx-4 mb-4">
+      <div className="flex-1 flex flex-col p-4">
+        <div className="flex justify-between items-center mb-2 px-2 min-h-7">
+          <Breadcrumb items={items} />
+          {/* TODO: conectar con la lógica real de logout cuando esté el auth */}
+          <button className="flex items-center gap-1 text-brand-white text-sm hover:opacity-80 transition-opacity">
+            Cerrar sesión <LogOut size={14} />
+          </button>
+        </div>
+        <main className="flex-1 bg-brand-bgApp rounded-2xl py-4 px-4 overflow-y-auto">
           {children}
         </main>
       </div>

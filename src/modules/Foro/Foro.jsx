@@ -1,8 +1,12 @@
+import ModuleBanner from "../../components/ui/ModuleBanner";
+
 export default function Foro() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-brand-midnight mb-4">Foro</h1>
-      <p className="text-brand-steel">Publicaciones del docente y comentarios de alumnos.</p>
+    <div className="p-8">
+      <ModuleBanner
+        title="Foro"
+        subtitle="Publicaciones del docente y comentarios de alumnos."
+      />
     </div>
   );
 }

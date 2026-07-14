@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import { estudianteApi } from "../../services/estudianteApi";
+import { estudianteApi } from "../../services/estudianteApi";
 import { useGrupo } from "../../context/GrupoContext";
 import UnirseModal from "./UnirseModal";
 import ModuleBanner from "../../components/ui/ModuleBanner";

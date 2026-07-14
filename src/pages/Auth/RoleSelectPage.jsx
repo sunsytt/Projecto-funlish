@@ -38,7 +38,7 @@ export default function RoleSelectPage() {
       </header>
 
       <main className="flex-1 flex items-center justify-center px-6 pb-10">
-        <div className="w-full max-w-4xl bg-brand-glacier/40 rounded-[2rem] p-10">
+        <div className="w-full max-w-4xl bg-brand-glacier/40 rounded-xl p-10">
           <h1 className="text-4xl font-extrabold text-brand-midnight mb-2">¿Quién eres?</h1>
           <p className="font-bold text-brand-midnight mb-2 capitalize">{rolSeleccionado}</p>
           <StepDots total={2} current={1} />
