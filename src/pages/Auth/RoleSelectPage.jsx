@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logoOscuro.png";
 // Ajusta estos nombres a como se llamen realmente en tu carpeta de assets
 import ilustracionEstudiante from "../../assets/images/rolAlumno.png";
 import ilustracionDocente from "../../assets/images/rolDocente.png";

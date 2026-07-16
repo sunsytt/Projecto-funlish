@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Eye, EyeOff, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logoOscuro.png";
 // Ajusta esta ruta al nombre real de tu ilustración dentro de assets
 import ilustracion from "../../assets/images/inicioGrupos.png";
 
@@ -55,7 +55,7 @@ export default function LoginPage() {
       </header>
 
       <main className="flex-1 flex items-center justify-center px-6 pb-10">
-        <div className="w-full max-w-5xl bg-brand-glacier/40 rounded-[2rem] p-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="w-full max-w-5xl bg-brand-glacier/40 rounded-4xl p-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div>
             <h1 className="text-4xl font-extrabold text-brand-midnight mb-6">
               Inicio de sesión

@@ -1,18 +1,22 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Breadcrumb from "../ui/Breadcrumb";
 import ConfirmarCerrarSesionModal from "../ui/ConfirmarCerrarSesionModal";
 import { usePageHeader } from "../../context/PageHeaderContext";
+import { useAuth } from "../../context/AuthContext";
 import { LogOut } from "lucide-react";
 
-export default function PageLayout({ children }) {
+// Ahora es una layout route: usa <Outlet/> en vez de recibir children,
+// así App.jsx puede anidar las rutas privadas dentro de esta.
+export default function PageLayout() {
   const { items } = usePageHeader();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [mostrarConfirmarSalida, setMostrarConfirmarSalida] = useState(false);
 
   function confirmarCierre() {
-    // TODO: cuando exista el módulo de Autenticación, limpiar aquí el token/sesión real
+    logout();
     setMostrarConfirmarSalida(false);
     navigate("/login");
   }
@@ -21,7 +25,7 @@ export default function PageLayout({ children }) {
     <div className="flex min-h-screen bg-brand-sidebar">
       <Sidebar />
       <div className="flex-1 flex flex-col p-4">
-        <div className="flex justify-between items-center mb-2 px-2 min-h-[28px]">
+        <div className="flex justify-between items-center mb-2 px-2 min-h-7">
           <Breadcrumb items={items} />
           <button
             onClick={() => setMostrarConfirmarSalida(true)}
@@ -31,7 +35,7 @@ export default function PageLayout({ children }) {
           </button>
         </div>
         <main className="flex-1 bg-brand-bgApp rounded-2xl py-8 px-5 overflow-y-auto">
-          {children}
+          <Outlet />
         </main>
       </div>
 

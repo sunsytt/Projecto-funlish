@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Eye, EyeOff, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logoOscuro.png";
 // Ajusta esta ruta al nombre real de tu ilustración
 import ilustracionEstudiante from "../../assets/images/registroAlumno.png";
 import StepDots from "../../components/ui/StepDots";
@@ -104,7 +104,7 @@ export default function RegistroForm() {
       </header>
 
       <main className="flex-1 flex items-center justify-center px-6 pb-10">
-        <div className="w-full max-w-5xl bg-brand-glacier/40 rounded-[2rem] p-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="w-full max-w-5xl bg-brand-glacier/40 rounded-4xl p-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div>
             <h1 className="text-4xl font-extrabold text-brand-midnight mb-2">Registro</h1>
             <p className="font-bold text-brand-midnight mb-2 capitalize">{rol}</p>
@@ -200,7 +200,7 @@ export default function RegistroForm() {
           <img
             src={ilustracionEstudiante}
             alt="Ilustración de estudiante"
-            className="hidden lg:block w-full h-auto rounded-3xl object-cover max-h-[520px]"
+            className="hidden lg:block w-full h-auto rounded-3xl object-cover max-h-130"
           />
         </div>
       </main>
