@@ -13,23 +13,23 @@ export default function MaterialHome() {
 
   useBreadcrumb([{ label: "Material" }]);
 
-  useEffect(() => {
-    cargarUnidades();
-  }, []);
-
   async function cargarUnidades() {
     // const datos = await materialesApi.listarUnidades(grupoId);
     const datos = [
-      { id: 1, nombre: "Unidad 1", numTemas: 5 },
-      { id: 2, nombre: "Unidad 2", numTemas: 4 },
-      { id: 3, nombre: "Unidad 3", numTemas: 2 },
-      { id: 4, nombre: "Unidad 4", numTemas: 6 },
-      { id: 5, nombre: "Unidad 5", numTemas: 3 },
-      { id: 6, nombre: "Unidad 6", numTemas: 9 },
+      { id: 1, nombre: "Unidad 1", descripcion: "Verb To Be & Greetings", numTemas: 5 },
+      { id: 2, nombre: "Unidad 2", descripcion: "Daily Routines & Frequency Adverbs", numTemas: 4 },
+      { id: 3, nombre: "Unidad 3", descripcion: "Past Simple & Time Expressions", numTemas: 2 },
+      { id: 4, nombre: "Unidad 4", descripcion: "Future Plans & Predictions", numTemas: 6 },
+      { id: 5, nombre: "Unidad 5", descripcion: "Comparatives & Superlatives", numTemas: 3 },
+      { id: 6, nombre: "Unidad 6", descripcion: "Modal Verbs & Suggestions", numTemas: 9 },
     ];
     // Asignamos un color de pestaña aleatorio a cada unidad, una sola vez al cargar
     setUnidades(datos.map((u) => ({ ...u, colorClass: getRandomCardColor() })));
   }
+
+  useEffect(() => {
+    cargarUnidades();
+  }, []);
 
   return (
     <div>
@@ -43,6 +43,7 @@ export default function MaterialHome() {
           <UnidadCard
             key={u.id}
             nombre={u.nombre}
+            descripcion={u.descripcion}
             numTemas={u.numTemas}
             colorClass={u.colorClass}
             onClick={() => navigate(`/grupos/${grupoId}/material/${u.id}`)}

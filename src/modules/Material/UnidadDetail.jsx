@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Search, FileStack } from "lucide-react";
+import { Search, FileStack, FileText, Image, Video, Headphones } from "lucide-react";
 import { useBreadcrumb } from "../../context/PageHeaderContext";
 // import { materialesApi } from "../../services/materialesApi";
+
+const fileTypeStyles = {
+  pdf: { bg: "bg-fileType-pdf/40", icon: FileText },
+  image: { bg: "bg-fileType-image/40", icon: Image },
+  video: { bg: "bg-fileType-video/40", icon: Video },
+  audio: { bg: "bg-fileType-audio/40", icon: Headphones },
+};
 
 export default function UnidadDetail() {
   const { grupoId, unidadId } = useParams();
@@ -17,25 +24,60 @@ export default function UnidadDetail() {
     { label: "Temas" },
   ]);
 
-  useEffect(() => {
-    cargarTemas();
-  }, [unidadId]);
-
   async function cargarTemas() {
     // const datos = await materialesApi.listarTemas(grupoId, unidadId);
     const datos = [
-      { id: 1, titulo: "Past Simple", numArchivos: 5, descripcion: "We will talk about a time", publicado: "20 jun 2026" },
-      { id: 2, titulo: "Future plans y predictions", numArchivos: 3, descripcion: "We will talk about a time", publicado: "20 jun 2026" },
-      { id: 3, titulo: "At the Supermarket: Quantifiers", numArchivos: 4, descripcion: "We will talk about a time", publicado: "20 jun 2026" },
-      { id: 4, titulo: "Making Comparisons", numArchivos: 3, descripcion: "We will talk about a time", publicado: "20 jun 2026" },
+      {
+        id: 1,
+        titulo: "Past Simple",
+        archivos: [
+          { id: 1, nombre: "Vocabulary_Help_Beatles.pdf", tipo: "pdf" },
+          { id: 2, nombre: "Grammar_Rules.png", tipo: "image" },
+          { id: 3, nombre: "Explanation_Present.mp4", tipo: "video" },
+          { id: 4, nombre: "Listening_Conversation.mp3", tipo: "audio" },
+          { id: 5, nombre: "Reading_Practice.pdf", tipo: "pdf" },
+        ],
+      },
+      {
+        id: 2,
+        titulo: "Future plans y predictions",
+        archivos: [
+          { id: 1, nombre: "Future_Forms.pdf", tipo: "pdf" },
+          { id: 2, nombre: "Predictions_Chart.png", tipo: "image" },
+          { id: 3, nombre: "Listening_Weather.mp3", tipo: "audio" },
+        ],
+      },
+      {
+        id: 3,
+        titulo: "At the Supermarket: Quantifiers",
+        archivos: [
+          { id: 1, nombre: "Quantifiers_Guide.pdf", tipo: "pdf" },
+          { id: 2, nombre: "Supermarket_Video.mp4", tipo: "video" },
+          { id: 3, nombre: "Vocabulary_Food.png", tipo: "image" },
+          { id: 4, nombre: "Dialogue_Audio.mp3", tipo: "audio" },
+        ],
+      },
+      {
+        id: 4,
+        titulo: "Making Comparisons",
+        archivos: [
+          { id: 1, nombre: "Comparatives_Superlatives.pdf", tipo: "pdf" },
+          { id: 2, nombre: "Examples_Chart.png", tipo: "image" },
+          { id: 3, nombre: "Practice_Audio.mp3", tipo: "audio" },
+        ],
+      },
     ];
     setTemas(datos);
   }
 
+  useEffect(() => {
+    cargarTemas();
+  }, [unidadId]);
+
   const temasFiltrados = temas.filter((t) =>
     t.titulo.toLowerCase().includes(busqueda.toLowerCase())
   );
-  const totalArchivos = temas.reduce((sum, t) => sum + t.numArchivos, 0);
+  const totalArchivos = temas.reduce((sum, t) => sum + t.archivos.length, 0);
 
   return (
     <div>
@@ -97,26 +139,33 @@ export default function UnidadDetail() {
                       {tema.titulo}
                     </h3>
                     <p className="text-sm text-brand-midnight/60">
-                      {tema.numArchivos} Archivos
+                      {tema.archivos.length} Archivos
                     </p>
-                    <p className="text-sm text-brand-midnight/60">{tema.descripcion}</p>
                   </div>
                 </div>
-                <span className="text-xs text-brand-midnight/50 whitespace-nowrap">
-                  Publicado: {tema.publicado}
-                </span>
               </button>
 
               {temaExpandidoId === tema.id && (
-                <div className="mt-4 pt-4 border-t border-neutral-inactive flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <p className="text-sm text-brand-midnight/60">
-                    Vista previa: {tema.numArchivos} archivo(s) disponibles
-                  </p>
+                <div className="mt-4 pt-4 border-t border-neutral-inactive">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    {tema.archivos.map((archivo) => {
+                      const { bg, icon: Icon } = fileTypeStyles[archivo.tipo];
+                      return (
+                        <span
+                          key={archivo.id}
+                          className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm text-brand-midnight ${bg}`}
+                        >
+                          <Icon size={18} className="shrink-0" />
+                          <span className="truncate">{archivo.nombre}</span>
+                        </span>
+                      );
+                    })}
+                  </div>
                   <button
                     onClick={() =>
                       navigate(`/grupos/${grupoId}/material/${unidadId}/${tema.id}`)
                     }
-                    className="bg-status-info text-brand-white text-sm font-medium px-4 py-2 rounded-full"
+                    className="text-status-info text-sm font-semibold hover:underline"
                   >
                     Ver material
                   </button>
