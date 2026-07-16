@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useBreadcrumb } from "../../context/PageHeaderContext";
 import ActivityCard from "./components/ActivityCard";
 import IniciarActividadModal from "./components/IniciarActividadModal";
+import { obtenerTema } from "./data/mockActividades";
+
 // import { actividadesApi } from "../../services/actividadesApi";
 
 export default function TemaActividades() {
@@ -20,54 +22,10 @@ export default function TemaActividades() {
   }, [temaId]);
 
   async function cargarActividades() {
-    // const datos = await actividadesApi.listarPorTema(grupoId, temaId);
-    const datos = {
-      nombre: "Present tenses",
-      actividades: [
-        {
-          id: 1,
-          titulo: "Present Tense Trivia",
-          fecha: "29 jun 2026",
-          tipo: "trivia",
-          estado: "completada",
-          xpTotal: 100,
-          xpGanado: 100,
-          progreso: 50,
-        },
-        {
-          id: 2,
-          titulo: "Daily Routines Scramble",
-          fecha: "25 jun 2026",
-          tipo: "scramble",
-          estado: "en_curso",
-          xpTotal: 150,
-          xpGanado: 0,
-          progreso: 50,
-        },
-        {
-          id: 3,
-          titulo: '"Help!" by The Beatles',
-          fecha: "19 jun 2026",
-          tipo: "trivia",
-          estado: "sin_entregar",
-          xpTotal: 200,
-          xpGanado: 0,
-          progreso: 50,
-        },
-        {
-          id: 4,
-          titulo: "Photo Quiz: Food & Quantifiers",
-          fecha: "9 jun 2026",
-          tipo: "scramble",
-          estado: "asignada",
-          xpTotal: 200,
-          xpGanado: 0,
-          progreso: 0,
-        },
-      ],
-    };
-    setTema(datos);
-  }
+  // const datos = await actividadesApi.listarPorTema(grupoId, temaId);
+  const datos = obtenerTema(temaId);
+  setTema(datos);
+}
 
   if (!tema) return null;
 

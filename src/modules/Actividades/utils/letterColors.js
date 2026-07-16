@@ -1,23 +1,36 @@
-const LETTER_COLORS = [
-  { bg: "bg-cardColor-skyBlue", text: "text-brand-midnight" },
-  { bg: "bg-cardColor-celeste", text: "text-brand-midnight" },
-  { bg: "bg-cardColor-lavender", text: "text-brand-white" },
-  { bg: "bg-cardColor-mint", text: "text-brand-midnight" },
-  { bg: "bg-skill-reading", text: "text-brand-white" },
-  { bg: "bg-skill-writing", text: "text-brand-white" },
-  { bg: "bg-skill-listening", text: "text-brand-midnight" },
-  { bg: "bg-skill-speaking", text: "text-brand-white" },
+const COLORES = [
+  "bg-cardColor-skyBlue",
+  "bg-cardColor-celeste",
+  "bg-cardColor-lavender",
+  "bg-cardColor-mint",
+  "bg-skill-reading",
+  "bg-skill-writing",
+  "bg-skill-listening",
+  "bg-skill-speaking",
 ];
 
 /**
- * Asigna un color estable a cada letra según su posición en el arreglo
- * original (para que "Tu respuesta" pueda mostrar el mismo color con
- * menor opacidad, como en el diseño de Figma).
+ * Asigna un color por PIEZA ÚNICA (letra o palabra), no por posición.
+ * El texto siempre es oscuro (text-brand-midnight): así se mantiene
+ * legible sin importar si el fondo está a color completo, al 40% (en
+ * "Tu respuesta") o al 30% (letra ya usada/deshabilitada).
  */
-export function asignarColoresALetras(letras) {
-  return letras.map((letra, i) => ({
-    letra,
-    id: `${letra}-${i}`,
-    ...LETTER_COLORS[i % LETTER_COLORS.length],
+export function asignarColoresAPiezas(piezas) {
+  const colorPorValor = new Map();
+  let siguienteColor = 0;
+
+  piezas.forEach((valor) => {
+    const clave = valor.toLowerCase();
+    if (!colorPorValor.has(clave)) {
+      colorPorValor.set(clave, COLORES[siguienteColor % COLORES.length]);
+      siguienteColor++;
+    }
+  });
+
+  return piezas.map((valor, i) => ({
+    valor,
+    id: `${valor}-${i}`,
+    bg: colorPorValor.get(valor.toLowerCase()),
+    text: "text-brand-midnight",
   }));
 }

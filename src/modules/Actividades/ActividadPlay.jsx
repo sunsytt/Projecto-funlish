@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBreadcrumb } from "../../context/PageHeaderContext";
 import { useActivityDeadline } from "./hooks/useActivityDeadline";
+import { obtenerActividad } from "./data/mockActividades";
+import { guardarProgreso, obtenerProgreso, limpiarProgreso } from "./utils/progresoStorage";
 import TriviaView from "./components/TriviaView";
 import ScrambleView from "./components/ScrambleView";
 import ConfirmarSalidaModal from "./components/ConfirmarSalidaModal";
+import ProgresoGuardadoModal from "./components/ProgresoGuardadoModal";
 import ResultadosActividad from "./components/ResultadosActividad";
-// import { actividadesApi } from "../../services/actividadesApi";
 
 export default function ActividadPlay() {
   const { grupoId, temaId, actividadId } = useParams();
@@ -14,8 +16,9 @@ export default function ActividadPlay() {
 
   const [actividad, setActividad] = useState(null);
   const [indiceActual, setIndiceActual] = useState(0);
-  const [respuestas, setRespuestas] = useState([]); // { preguntaId, esCorrecta }
+  const [respuestas, setRespuestas] = useState([]);
   const [mostrarSalida, setMostrarSalida] = useState(false);
+  const [progresoGuardadoInfo, setProgresoGuardadoInfo] = useState(null);
   const [finalizada, setFinalizada] = useState(false);
 
   useBreadcrumb([
@@ -29,101 +32,61 @@ export default function ActividadPlay() {
 
   async function cargarActividad() {
     // const datos = await actividadesApi.obtenerActividad(grupoId, temaId, actividadId);
-    const datos = {
-      id: actividadId,
-      tipo: "trivia", // "trivia" | "scramble"
-      titulo: "Present Tense Trivia",
-      temaNombre: "Present tenses",
-      fecha: "29 jun 2026",
-      tiempoSegundosPregunta: 30,
-      limiteTiempo: { modoTiempo: "duracion", duracionMinutos: 10 },
-      // limiteTiempo: { modoTiempo: "fecha", fechaLimite: "2026-07-20T23:59:59" },
-      preguntas: [
-        {
-          id: 1,
-          enunciado: '"Every morning, Sarah ______ her dog in the park before going to work."',
-          opciones: [
-            { id: "a", texto: "walks" },
-            { id: "b", texto: "is walk" },
-            { id: "c", texto: "walk" },
-            { id: "d", texto: "walking" },
-          ],
-          respuestaCorrectaId: "a",
-          puntos: 20,
-        },
-        {
-          id: 2,
-          enunciado: '"They usually ______ breakfast together on Sundays."',
-          opciones: [
-            { id: "a", texto: "has" },
-            { id: "b", texto: "have" },
-            { id: "c", texto: "having" },
-            { id: "d", texto: "is having" },
-          ],
-          respuestaCorrectaId: "b",
-          puntos: 20,
-        },
-        {
-          id: 3,
-          enunciado: '"My brother ______ soccer every weekend."',
-          opciones: [
-            { id: "a", texto: "play" },
-            { id: "b", texto: "playing" },
-            { id: "c", texto: "plays" },
-            { id: "d", texto: "is play" },
-          ],
-          respuestaCorrectaId: "c",
-          puntos: 20,
-        },
-        {
-          id: 4,
-          enunciado: '"I ______ my teeth twice a day."',
-          opciones: [
-            { id: "a", texto: "brushes" },
-            { id: "b", texto: "brush" },
-            { id: "c", texto: "brushing" },
-            { id: "d", texto: "am brush" },
-          ],
-          respuestaCorrectaId: "b",
-          puntos: 20,
-        },
-        {
-          id: 5,
-          enunciado: '"She ______ to the gym after work."',
-          opciones: [
-            { id: "a", texto: "go" },
-            { id: "b", texto: "going" },
-            { id: "c", texto: "goes" },
-            { id: "d", texto: "is go" },
-          ],
-          respuestaCorrectaId: "c",
-          puntos: 20,
-        },
-      ],
-    };
+    const datos = obtenerActividad(temaId, actividadId);
     setActividad(datos);
+
+    // Si hay progreso guardado de una sesión anterior, retomamos desde ahí
+    const guardado = obtenerProgreso(grupoId, actividadId);
+    if (guardado && datos) {
+      const indiceValido = Math.min(guardado.indiceActual ?? 0, datos.preguntas.length - 1);
+      setIndiceActual(Math.max(indiceValido, 0));
+      setRespuestas(guardado.respuestas ?? []);
+    }
   }
 
   const limite = useActivityDeadline(actividad?.limiteTiempo);
 
-  // Si se acaba el tiempo total de la actividad, se corta y pasa a resultados
   useEffect(() => {
     if (limite.agotado && !finalizada) {
+      limpiarProgreso(grupoId, actividadId);
       setFinalizada(true);
     }
   }, [limite.agotado, finalizada]);
 
   function handleResponder(preguntaId, respuestaDada, esCorrecta) {
-    setRespuestas((prev) => [...prev, { preguntaId, respuestaDada, esCorrecta }]);
+    const nuevasRespuestas = [...respuestas, { preguntaId, respuestaDada, esCorrecta }];
+    setRespuestas(nuevasRespuestas);
+    // Guardado incremental: si el estudiante cierra la pestaña sin usar
+    // "Salir", igual queda registrado lo último que respondió.
+    guardarProgreso(grupoId, actividadId, {
+      indiceActual,
+      respuestas: nuevasRespuestas,
+    });
   }
 
   function handleSiguiente() {
     const esUltima = indiceActual + 1 >= actividad.preguntas.length;
     if (esUltima) {
+      limpiarProgreso(grupoId, actividadId);
       setFinalizada(true);
     } else {
-      setIndiceActual((i) => i + 1);
+      const siguienteIndice = indiceActual + 1;
+      setIndiceActual(siguienteIndice);
+      guardarProgreso(grupoId, actividadId, {
+        indiceActual: siguienteIndice,
+        respuestas,
+      });
     }
+  }
+
+  function handleConfirmarSalida() {
+    guardarProgreso(grupoId, actividadId, { indiceActual, respuestas });
+    setMostrarSalida(false);
+    setProgresoGuardadoInfo({
+      respondidas: respuestas.length,
+      total: actividad.preguntas.length,
+      correctas: respuestas.filter((r) => r.esCorrecta).length,
+    });
   }
 
   function handleVolverAActividades() {
@@ -131,6 +94,26 @@ export default function ActividadPlay() {
   }
 
   if (!actividad) return null;
+
+  if (!actividad.preguntas || actividad.preguntas.length === 0) {
+    return (
+      <div className="bg-brand-white rounded-2xl shadow-sm p-10 text-center max-w-xl mx-auto">
+        <h2 className="text-xl font-bold text-brand-midnight mb-2">
+          Esta actividad aún no tiene contenido
+        </h2>
+        <p className="text-brand-midnight/60 mb-6">
+          Tu profesor todavía no ha cargado las preguntas de "{actividad.titulo}".
+          Vuelve más tarde.
+        </p>
+        <button
+          onClick={handleVolverAActividades}
+          className="bg-button-DEFAULT hover:bg-button-hover text-brand-white font-semibold px-6 py-3 rounded-xl transition"
+        >
+          Volver a actividades
+        </button>
+      </div>
+    );
+  }
 
   if (finalizada) {
     const correctas = respuestas.filter((r) => r.esCorrecta).length;
@@ -152,31 +135,25 @@ export default function ActividadPlay() {
   }
 
   const preguntaActual = actividad.preguntas[indiceActual];
-  const xpTotalActividad = actividad.preguntas.reduce((sum, p) => sum + p.puntos, 0);
 
   const propsComunes = {
     pregunta: {
       ...preguntaActual,
       tituloActividad: actividad.titulo,
       fecha: actividad.fecha,
-      // Para scramble, si tu backend usa otro nombre de campo, ajusta aquí:
-      palabraCorrecta: preguntaActual.palabraCorrecta,
-      letras: preguntaActual.letras,
-      pista: preguntaActual.pista,
     },
     indice: indiceActual + 1,
     total: actividad.preguntas.length,
-    xpTotal: xpTotalActividad,
-    tiempoSegundosPregunta: actividad.tiempoSegundosPregunta,
+    xpTotal: actividad.xpTotal,
     onResponder: handleResponder,
     onSiguiente: handleSiguiente,
   };
 
   return (
     <div>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end items-center gap-4 mb-4">
         {limite.modoTiempo === "duracion" && (
-          <span className="text-sm font-semibold text-brand-midnight/70 mr-4 self-center">
+          <span className="text-sm font-semibold text-brand-midnight/70">
             Tiempo restante de la actividad: {limite.tiempoFormateado}
           </span>
         )}
@@ -197,7 +174,16 @@ export default function ActividadPlay() {
       {mostrarSalida && (
         <ConfirmarSalidaModal
           onSeguirJugando={() => setMostrarSalida(false)}
-          onSalir={handleVolverAActividades}
+          onSalir={handleConfirmarSalida}
+        />
+      )}
+
+      {progresoGuardadoInfo && (
+        <ProgresoGuardadoModal
+          respondidas={progresoGuardadoInfo.respondidas}
+          total={progresoGuardadoInfo.total}
+          correctas={progresoGuardadoInfo.correctas}
+          onVolver={handleVolverAActividades}
         />
       )}
     </div>

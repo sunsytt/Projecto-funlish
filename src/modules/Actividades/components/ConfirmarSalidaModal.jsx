@@ -4,8 +4,8 @@ export default function ConfirmarSalidaModal({ onSeguirJugando, onSalir }) {
       <div className="bg-brand-white rounded-2xl p-8 max-w-md w-full text-center">
         <h2 className="text-2xl font-bold text-brand-steel mb-4">Confirmar salida</h2>
         <p className="text-brand-midnight/80 mb-6">
-          ¿Estás seguro que quieres salir? Si sales ahora no se guardará el
-          progreso de esta actividad y perderás los XP acumulados
+          ¿Estás seguro que quieres salir? Tu progreso se guardará y podrás
+          continuar la actividad más tarde desde donde te quedaste.
         </p>
         <div className="flex justify-center gap-3">
           <button

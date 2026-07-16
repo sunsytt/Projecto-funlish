@@ -4,6 +4,8 @@ import ModuleBanner from "../../components/ui/ModuleBanner";
 import { useBreadcrumb } from "../../context/PageHeaderContext";
 import { getRandomCardColor } from "../../utils/cardColors";
 import TemaActividadCard from "./components/TemaActividadCard";
+import { listarTemas } from "./data/mockActividades";
+
 // import { actividadesApi } from "../../services/actividadesApi";
 
 export default function Actividades() {
@@ -18,17 +20,10 @@ export default function Actividades() {
   }, []);
 
   async function cargarTemas() {
-    // Los temas ya existen (creados en Material); aquí solo traemos
-    // cuántas actividades tiene cada uno y cuántas ha resuelto el estudiante.
-    // const datos = await actividadesApi.listarTemas(grupoId);
-    const datos = [
-      { id: 1, nombre: "Present tenses", numActividades: 4, completadas: 1 },
-      { id: 2, nombre: "Past tenses", numActividades: 3, completadas: 3 },
-      { id: 3, nombre: "Future forms", numActividades: 5, completadas: 0 },
-      { id: 4, nombre: "Modal verbs", numActividades: 2, completadas: 1 },
-    ];
-    setTemas(datos.map((t) => ({ ...t, colorClass: getRandomCardColor() })));
-  }
+  // const datos = await actividadesApi.listarTemas(grupoId);
+  const datos = listarTemas();
+  setTemas(datos.map((t) => ({ ...t, colorClass: getRandomCardColor() })));
+}
 
   return (
     <div>

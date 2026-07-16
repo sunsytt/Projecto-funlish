@@ -1,191 +1,154 @@
 import { useEffect, useState } from "react";
-import { useCountdown } from "../hooks/useCountdown";
-import { asignarColoresALetras } from "../utils/letterColors";
+import { asignarColoresAPiezas } from "../utils/letterColors";
 
-export default function ScrambleView({
-  pregunta,
-  indice,
-  total,
-  xpTotal,
-  tiempoSegundosPregunta,
-  onResponder,
-  onSiguiente,
-}) {
+export default function ScrambleView({ pregunta, indice, total, xpTotal, onResponder, onSiguiente }) {
+  const esOraciones = pregunta.modoScramble === "oraciones";
+  const separador = esOraciones ? " " : "";
+  // Piezas objetivo para saber cuántos huecos mostrar en "Tu respuesta"
+  const piezasObjetivo = esOraciones
+    ? pregunta.respuestaCorrecta.split(" ")
+    : pregunta.respuestaCorrecta.split("");
+
   const [disponibles, setDisponibles] = useState([]);
   const [respuesta, setRespuesta] = useState([]);
   const [verificado, setVerificado] = useState(false);
 
-  const { segundosRestantes, agotado } = useCountdown(
-    tiempoSegundosPregunta,
-    pregunta.id
-  );
-
-  // Reinicia todo cuando cambia la palabra
   useEffect(() => {
-    const coloreadas = asignarColoresALetras(pregunta.letras).map((l) => ({
-      ...l,
+    const coloreadas = asignarColoresAPiezas(pregunta.piezas).map((p) => ({
+      ...p,
       usada: false,
     }));
     setDisponibles(coloreadas);
     setRespuesta([]);
     setVerificado(false);
-  }, [pregunta.id, pregunta.letras]);
+  }, [pregunta.id, pregunta.piezas]);
 
-  // Si se acaba el tiempo, congela la selección y auto-envía lo que tenga
-  useEffect(() => {
-    if (agotado && !verificado) {
-      verificar();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [agotado]);
-
-  function seleccionarLetra(letra) {
-    if (verificado || agotado) return;
-    if (letra.usada) return;
-    if (respuesta.length >= pregunta.palabraCorrecta.length) return;
+  function seleccionarPieza(pieza) {
+    if (verificado || pieza.usada) return;
+    if (respuesta.length >= piezasObjetivo.length) return;
 
     setDisponibles((prev) =>
-      prev.map((l) => (l.id === letra.id ? { ...l, usada: true } : l))
+      prev.map((p) => (p.id === pieza.id ? { ...p, usada: true } : p))
     );
-    setRespuesta((prev) => [...prev, letra]);
+    setRespuesta((prev) => [...prev, pieza]);
   }
 
-  function quitarDeRespuesta(letra) {
-    if (verificado || agotado) return;
-    setRespuesta((prev) => prev.filter((l) => l.id !== letra.id));
+  function quitarDeRespuesta(pieza) {
+    if (verificado) return;
+    setRespuesta((prev) => prev.filter((p) => p.id !== pieza.id));
     setDisponibles((prev) =>
-      prev.map((l) => (l.id === letra.id ? { ...l, usada: false } : l))
+      prev.map((p) => (p.id === pieza.id ? { ...p, usada: false } : p))
     );
   }
 
   function borrarUltima() {
-    if (verificado || agotado || respuesta.length === 0) return;
-    const ultima = respuesta[respuesta.length - 1];
-    quitarDeRespuesta(ultima);
+    if (verificado || respuesta.length === 0) return;
+    quitarDeRespuesta(respuesta[respuesta.length - 1]);
   }
 
   function verificar() {
-    const palabraArmada = respuesta.map((l) => l.letra).join("");
-    const esCorrecta = palabraArmada === pregunta.palabraCorrecta;
+    const armado = respuesta.map((p) => p.valor).join(separador);
+    const esCorrecta = armado.toLowerCase() === pregunta.respuestaCorrecta.toLowerCase();
     setVerificado(true);
-    onResponder(pregunta.id, palabraArmada, esCorrecta);
+    onResponder(pregunta.id, armado, esCorrecta);
   }
 
   function handleBoton() {
-    if (!verificado) {
-      verificar();
-    } else {
-      onSiguiente();
-    }
+    verificado ? onSiguiente() : verificar();
   }
 
   const progreso = Math.round((indice / total) * 100);
-  const respuestaCompleta = respuesta.length === pregunta.palabraCorrecta.length;
+  const respuestaCompleta = respuesta.length === piezasObjetivo.length;
   const botonDeshabilitado = !verificado && !respuestaCompleta;
+
+  const claseFicha = esOraciones
+    ? "px-4 py-3 rounded-xl font-semibold text-base"
+    : "w-14 h-14 rounded-xl font-bold text-xl uppercase";
 
   return (
     <div>
       <div className="border-2 border-status-warning rounded-2xl p-6 mb-6 bg-brand-white">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h2 className="text-xl font-bold text-brand-midnight">
-              {pregunta.tituloActividad}
-            </h2>
+            <h2 className="text-xl font-bold text-brand-midnight">{pregunta.tituloActividad}</h2>
             <p className="text-sm text-brand-midnight/60 mb-2">{pregunta.fecha}</p>
-            <div className="flex gap-2">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-skill-writing/20 text-skill-writing">
-                Writing
-              </span>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold border border-brand-steel/40 text-brand-steel">
-                Scramble
-              </span>
-            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-semibold border border-brand-steel/40 text-brand-steel">
+              Scramble
+            </span>
           </div>
           <div className="text-right shrink-0">
             <span className="inline-block bg-status-info text-brand-white text-sm font-semibold px-4 py-1 rounded-full mb-1">
               En curso
             </span>
-            <p className="text-status-warning font-extrabold text-2xl leading-none">
-              {xpTotal} XP
-            </p>
+            <p className="text-status-warning font-extrabold text-2xl leading-none">{xpTotal} XP</p>
             <p className="text-xs text-brand-midnight/60">{progreso}% progreso</p>
           </div>
         </div>
 
         <div className="w-full h-2 bg-neutral-inactive rounded-full overflow-hidden mb-2">
-          <div
-            className="h-full bg-status-warning rounded-full transition-all"
-            style={{ width: `${progreso}%` }}
-          />
+          <div className="h-full bg-status-warning rounded-full transition-all" style={{ width: `${progreso}%` }} />
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-brand-steel font-medium">
-            Palabra {indice} de {total}
-          </span>
-          <span
-            className={`font-semibold ${
-              agotado ? "text-status-error" : "text-brand-midnight/60"
-            }`}
-          >
-            {agotado ? "¡Tiempo agotado!" : `${segundosRestantes}s`}
-          </span>
-        </div>
+        <span className="text-brand-steel font-medium text-sm">
+          {esOraciones ? "Oración" : "Palabra"} {indice} de {total}
+        </span>
       </div>
 
       <div className="bg-brand-white rounded-2xl p-8 mb-6">
         <p className="text-center font-bold text-brand-midnight mb-2">
-          Ordena las palabras para formar la palabra
+          {esOraciones
+            ? "Ordena las palabras para formar la oración"
+            : "Ordena las letras para formar la palabra"}
         </p>
-        <p className="text-center text-brand-midnight/60 mb-8">
-          Pista: "{pregunta.pista}"
-        </p>
+        <p className="text-center text-brand-midnight/60 mb-8">Pista: "{pregunta.pista}"</p>
 
-        <p className="font-semibold text-brand-midnight mb-3">Letras disponibles:</p>
+        <p className="font-semibold text-brand-midnight mb-3">
+          {esOraciones ? "Palabras disponibles:" : "Letras disponibles:"}
+        </p>
         <div className="flex flex-wrap gap-3 mb-8">
-          {disponibles.map((l) => (
+          {disponibles.map((p) => (
             <button
-              key={l.id}
-              onClick={() => seleccionarLetra(l)}
-              disabled={l.usada || verificado || agotado}
-              className={`w-14 h-14 rounded-xl font-bold text-xl uppercase transition ${l.bg} ${l.text} ${
-                l.usada ? "opacity-30 cursor-not-allowed" : "hover:brightness-95"
+              key={p.id}
+              onClick={() => seleccionarPieza(p)}
+              disabled={p.usada || verificado}
+              className={`transition ${claseFicha} ${p.bg} ${p.text} ${
+                p.usada ? "opacity-30 cursor-not-allowed" : "hover:brightness-95"
               }`}
             >
-              {l.letra}
+              {p.valor}
             </button>
           ))}
         </div>
 
         <p className="font-semibold text-brand-midnight mb-3">Tu respuesta:</p>
         <div className="flex flex-wrap gap-3">
-          {Array.from({ length: pregunta.palabraCorrecta.length }).map((_, i) => {
-            const letra = respuesta[i];
-            if (!letra) {
+          {piezasObjetivo.map((_, i) => {
+            const pieza = respuesta[i];
+            if (!pieza) {
               return (
                 <span
                   key={i}
-                  className="w-14 h-14 rounded-xl bg-neutral-inactive/40 border-2 border-dashed border-neutral-inactive"
+                  className={`${esOraciones ? "min-w-20 h-12" : "w-14 h-14"} rounded-xl bg-neutral-inactive/40 border-2 border-dashed border-neutral-inactive`}
                 />
               );
             }
 
-            let estiloVerificado = `${letra.bg}/40 ${letra.text}`;
+            let estilo = `${pieza.bg}/40 ${pieza.text}`;
             if (verificado) {
               const correctaEnPosicion =
-                pregunta.palabraCorrecta[i]?.toLowerCase() === letra.letra.toLowerCase();
-              estiloVerificado = correctaEnPosicion
+                piezasObjetivo[i]?.toLowerCase() === pieza.valor.toLowerCase();
+              estilo = correctaEnPosicion
                 ? "bg-status-success/30 text-status-success border-2 border-status-success"
                 : "bg-status-error/30 text-status-error border-2 border-status-error";
             }
 
             return (
               <button
-                key={letra.id}
-                onClick={() => quitarDeRespuesta(letra)}
-                disabled={verificado || agotado}
-                className={`w-14 h-14 rounded-xl font-bold text-xl uppercase transition ${estiloVerificado}`}
+                key={pieza.id}
+                onClick={() => quitarDeRespuesta(pieza)}
+                disabled={verificado}
+                className={`transition ${claseFicha} ${estilo}`}
               >
-                {letra.letra}
+                {pieza.valor}
               </button>
             );
           })}
@@ -193,16 +156,16 @@ export default function ScrambleView({
 
         {verificado && (
           <div className="mt-6">
-            <p className="text-sm font-semibold text-brand-midnight/60 mb-2">
-              Respuesta correcta:
-            </p>
-            <div className="flex gap-2">
-              {pregunta.palabraCorrecta.split("").map((letra, i) => (
+            <p className="text-sm font-semibold text-brand-midnight/60 mb-2">Respuesta correcta:</p>
+            <div className="flex flex-wrap gap-2">
+              {piezasObjetivo.map((valor, i) => (
                 <span
                   key={i}
-                  className="w-12 h-12 rounded-xl bg-status-success/30 text-status-success font-bold text-lg uppercase flex items-center justify-center"
+                  className={`${
+                    esOraciones ? "px-4 py-2" : "w-12 h-12 flex items-center justify-center"
+                  } rounded-xl bg-status-success/30 text-status-success font-bold uppercase`}
                 >
-                  {letra}
+                  {valor}
                 </span>
               ))}
             </div>

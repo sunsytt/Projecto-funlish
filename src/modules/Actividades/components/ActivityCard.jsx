@@ -1,4 +1,4 @@
-import { Brain, Shuffle } from "lucide-react";
+import { Brain, Shuffle, Lock } from "lucide-react";
 import EstadoBadge from "./EstadoBadge";
 
 const iconoPorTipo = {
@@ -9,7 +9,19 @@ const iconoPorTipo = {
 export default function ActivityCard({ actividad, onIniciar }) {
   const Icono = iconoPorTipo[actividad.tipo];
   const xpMostrado =
-    actividad.estado === "asignada" ? `0/${actividad.xpTotal} XP` : `${actividad.xpGanado ?? 0}/${actividad.xpTotal} XP`;
+    actividad.estado === "completada"
+      ? `${actividad.xpGanado ?? 0}/${actividad.xpTotal} XP`
+      : `0/${actividad.xpTotal} XP`;
+
+  const sinContenido = !actividad.preguntas || actividad.preguntas.length === 0;
+  const vencida = actividad.estado === "sin_entregar";
+  const puedeIniciar = actividad.estado !== "completada" && !vencida && !sinContenido;
+
+  let mensajeBloqueo = null;
+  if (actividad.estado !== "completada") {
+    if (vencida) mensajeBloqueo = "El plazo de entrega ya venció";
+    else if (sinContenido) mensajeBloqueo = "Tu profesor aún no carga el contenido";
+  }
 
   return (
     <div className="bg-brand-white rounded-2xl shadow-sm p-5 flex items-center justify-between gap-4">
@@ -32,13 +44,21 @@ export default function ActivityCard({ actividad, onIniciar }) {
         <span className="text-xs text-brand-midnight/60">
           {actividad.progreso}% {actividad.estado === "completada" ? "progreso" : "completada"}
         </span>
-        {actividad.estado !== "completada" && (
+
+        {actividad.estado !== "completada" && puedeIniciar && (
           <button
             onClick={() => onIniciar(actividad)}
             className="mt-1 bg-button-DEFAULT hover:bg-button-hover active:bg-button-pressed text-brand-white text-sm font-semibold px-4 py-2 rounded-xl transition"
           >
             Iniciar actividad
           </button>
+        )}
+
+        {actividad.estado !== "completada" && !puedeIniciar && (
+          <span className="mt-1 flex items-center gap-1.5 text-xs text-brand-midnight/50 px-4 py-2">
+            <Lock size={12} />
+            {mensajeBloqueo}
+          </span>
         )}
       </div>
     </div>
