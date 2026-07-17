@@ -33,6 +33,7 @@ export default function Perfil() {
     <div>
       <PerfilHeader alumno={alumno} />
 
+      {/* Stat cards: fila completa arriba, como en el diseño original */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           icon={Star}
@@ -73,10 +74,16 @@ export default function Perfil() {
         />
       </div>
 
-      <div className="flex flex-col gap-6">
-        <RendimientoPorTema datos={rendimientoPorTema} />
-        <ActividadesMenorRendimiento datos={actividadesMenorRendimiento} />
-        <RankingGrupal ranking={ranking} totalAlumnos={stats.totalAlumnos} />
+      {/* Debajo: gráficas a la izquierda, ranking solo a la derecha */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          <RendimientoPorTema datos={rendimientoPorTema} />
+          <ActividadesMenorRendimiento datos={actividadesMenorRendimiento} />
+        </div>
+
+        <div className="flex items-center">
+          <RankingGrupal ranking={ranking} totalAlumnos={stats.totalAlumnos} />
+        </div>
       </div>
     </div>
   );

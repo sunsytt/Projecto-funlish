@@ -24,39 +24,43 @@ export default function ActivityCard({ actividad, onIniciar }) {
   }
 
   return (
-    <div className="bg-brand-white rounded-2xl shadow-sm p-5 flex items-center justify-between gap-4">
-      <div className="flex items-center gap-4">
-        <span className="bg-skill-writing/20 rounded-full p-4 shrink-0">
-          <Icono size={22} className="text-brand-midnight" />
+    <div className="bg-brand-white rounded-xl shadow-sm p-3.5 flex items-center justify-between gap-3">
+      <div className="flex items-center gap-3">
+        <span className="bg-skill-writing/20 rounded-full p-2.5 shrink-0">
+          <Icono size={18} className="text-brand-midnight" />
         </span>
         <div>
-          <h3 className="font-bold text-brand-midnight text-lg">{actividad.titulo}</h3>
-          <p className="text-sm text-brand-midnight/60 mb-2">{actividad.fecha}</p>
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold border border-brand-steel/40 text-brand-steel">
-            {actividad.tipo === "trivia" ? "Trivia" : "Scramble"}
-          </span>
+          <h3 className="font-bold text-brand-midnight text-base leading-tight">
+            {actividad.titulo}
+          </h3>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="text-xs text-brand-midnight/60">{actividad.fecha}</p>
+            <span className="inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold border border-brand-steel/40 text-brand-steel">
+              {actividad.tipo === "trivia" ? "Trivia" : "Scramble"}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-col items-end gap-2 shrink-0">
+      <div className="flex flex-col items-end gap-1 shrink-0">
         <EstadoBadge estado={actividad.estado} />
-        <span className="text-status-warning font-bold text-lg">{xpMostrado}</span>
-        <span className="text-xs text-brand-midnight/60">
+        <span className="text-status-warning font-bold text-sm">{xpMostrado}</span>
+        <span className="text-[11px] text-brand-midnight/60">
           {actividad.progreso}% {actividad.estado === "completada" ? "progreso" : "completada"}
         </span>
 
         {actividad.estado !== "completada" && puedeIniciar && (
           <button
             onClick={() => onIniciar(actividad)}
-            className="mt-1 bg-button-DEFAULT hover:bg-button-hover active:bg-button-pressed text-brand-white text-sm font-semibold px-4 py-2 rounded-xl transition"
+            className="mt-0.5 bg-button-DEFAULT hover:bg-button-hover active:bg-button-pressed text-brand-white text-xs font-semibold px-3 py-1.5 rounded-lg transition"
           >
             Iniciar actividad
           </button>
         )}
 
         {actividad.estado !== "completada" && !puedeIniciar && (
-          <span className="mt-1 flex items-center gap-1.5 text-xs text-brand-midnight/50 px-4 py-2">
-            <Lock size={12} />
+          <span className="mt-0.5 flex items-center gap-1 text-[11px] text-brand-midnight/50 px-3 py-1.5">
+            <Lock size={11} />
             {mensajeBloqueo}
           </span>
         )}

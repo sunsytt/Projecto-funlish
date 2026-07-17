@@ -1,4 +1,4 @@
-import { Crown } from "lucide-react";
+import { Crown, User } from "lucide-react";
 
 const MEDALLA = {
   1: "bg-status-warning text-brand-white",
@@ -32,7 +32,9 @@ export default function RankingGrupal({ ranking, totalAlumnos }) {
               {a.puesto <= 3 ? <Crown size={14} /> : a.puesto}
             </span>
 
-            <span className="w-9 h-9 rounded-full bg-brand-glacier shrink-0" />
+            <span className="w-9 h-9 rounded-full bg-brand-glacier shrink-0 flex items-center justify-center">
+              <User size={18} className="text-brand-steel" />
+            </span>
 
             <span
               className={`flex-1 font-medium ${
