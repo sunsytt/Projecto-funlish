@@ -28,7 +28,12 @@ export function obtenerForo(grupoId) {
         fecha: "Hace 49 minutos",
         contenido:
           "Hi everyone! Les comparto la hoja de trabajo en PDF que utilizaremos mañana para la dinámica de la canción de The Beatles. Por favor, descarguen el archivo y repasen el vocabulario de los verbos en pasado que vienen en la primera página. If you have questions, leave a comment here",
-        archivo: { id: 1, nombre: "Vocabulary_Help_Beatles.pdf", tipo: "pdf", url: "" },
+        archivo: {
+          id: 1,
+          nombre: "Vocabulary_Help_Beatles.pdf",
+          tipo: "pdf",
+          url: "https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf",
+        },
         comentarios: [
           {
             id: 1,
@@ -51,7 +56,12 @@ export function obtenerForo(grupoId) {
         fecha: "Hace 23 horas",
         contenido:
           "Hello class! Les recuerdo que el próximo viernes tendremos nuestro examen de la Unidad 3. Para ayudarles a repasar los temas de Vocabulary y Reading, les adjunto la guía de estudio oficial. Traten de resolverla este fin de semana. Si se atoran en algún ejercicio, pónganlo en los comentarios para resolverlo juntos el lunes. Good luck!",
-        archivo: { id: 2, nombre: "StudyGuide_Unit3.pdf", tipo: "pdf", url: "" },
+        archivo: {
+          id: 2,
+          nombre: "StudyGuide_Unit3.pdf",
+          tipo: "pdf",
+          url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        },
         comentarios: [
           { id: 1, autor: "Kevin Andrade", fecha: "Hace 20 horas", texto: "¿El examen es oral o escrito?" },
           {
@@ -81,7 +91,12 @@ export function obtenerForo(grupoId) {
         fecha: "Hace 2 días",
         contenido:
           "Les dejo un esquema visual con la comparación de las reglas gramaticales de Present Simple y Past Simple. Es un buen resumen para tener a la mano mientras hacen sus tareas de esta semana.",
-        archivo: { id: 3, nombre: "Grammar_Rules.png", tipo: "image", url: "" },
+        archivo: {
+          id: 3,
+          nombre: "Grammar_Rules.png",
+          tipo: "image",
+          url: "https://picsum.photos/id/1015/900/600",
+        },
         comentarios: [
           {
             id: 1,
@@ -98,7 +113,12 @@ export function obtenerForo(grupoId) {
         fecha: "Hace 3 días",
         contenido:
           "Aquí les dejo el video donde explico paso a paso cómo formar oraciones en Present Continuous, con varios ejemplos de la vida diaria. Véanlo antes de la clase del jueves.",
-        archivo: { id: 4, nombre: "Explanation_Present.mp4", tipo: "video", url: "" },
+        archivo: {
+          id: 4,
+          nombre: "Explanation_Present.mp4",
+          tipo: "video",
+          url: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        },
         comentarios: [],
       },
       {
@@ -108,7 +128,12 @@ export function obtenerForo(grupoId) {
         fecha: "Hace 4 días",
         contenido:
           "Escuchen este audio de una conversación real en un café y traten de identificar las frases que usamos para pedir algo de comer o beber. Lo revisamos juntos en la próxima sesión.",
-        archivo: { id: 5, nombre: "Listening_Conversation.mp3", tipo: "audio", url: "" },
+        archivo: {
+          id: 5,
+          nombre: "Listening_Conversation.mp3",
+          tipo: "audio",
+          url: "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3",
+        },
         comentarios: [
           {
             id: 1,

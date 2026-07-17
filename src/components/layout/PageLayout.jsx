@@ -7,8 +7,6 @@ import { usePageHeader } from "../../context/PageHeaderContext";
 import { useAuth } from "../../context/AuthContext";
 import { LogOut } from "lucide-react";
 
-// Ahora es una layout route: usa <Outlet/> en vez de recibir children,
-// así App.jsx puede anidar las rutas privadas dentro de esta.
 export default function PageLayout() {
   const { items } = usePageHeader();
   const { logout } = useAuth();
@@ -22,10 +20,14 @@ export default function PageLayout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-brand-sidebar">
+    // h-screen + overflow-hidden: la página completa ya NO puede crecer más
+    // allá de la ventana ni hacer scroll global. Así el sidebar (que vive
+    // fuera del <main>) se queda fijo sin importar qué tan largo sea el
+    // contenido de cada módulo.
+    <div className="flex h-screen overflow-hidden bg-brand-sidebar">
       <Sidebar />
-      <div className="flex-1 flex flex-col p-4">
-        <div className="flex justify-between items-center mb-2 px-2 min-h-7">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex justify-between items-center mb-2 px-2 pt-4 min-h-7 shrink-0">
           <Breadcrumb items={items} />
           <button
             onClick={() => setMostrarConfirmarSalida(true)}
@@ -34,7 +36,7 @@ export default function PageLayout() {
             Cerrar sesión <LogOut size={14} />
           </button>
         </div>
-        <main className="flex-1 bg-brand-bgApp rounded-2xl py-8 px-5 overflow-y-auto">
+        <main className="flex-1 bg-brand-bgApp rounded-2xl py-8 px-5 mx-4 mb-4 overflow-y-auto">
           <Outlet />
         </main>
       </div>

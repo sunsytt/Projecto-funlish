@@ -42,7 +42,9 @@ export default function Foro() {
           )}
         </div>
 
-        <div className="flex flex-col gap-6">
+        {/* sticky top-4: se queda fija respecto al scroll del <main>,
+            que es el contenedor que realmente scrollea (ver PageLayout.jsx) */}
+        <div className="flex flex-col gap-6 sticky top-4 self-start">
           <InfoGrupoPanel grupo={datos.grupo} />
           <RankingPreview ranking={datos.rankingPreview} />
         </div>

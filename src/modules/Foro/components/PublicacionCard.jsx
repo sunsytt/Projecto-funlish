@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileText, MessageCircle, Send } from "lucide-react";
 import FilePreviewModal from "../../../components/ui/FilePreviewModal";
 
@@ -7,6 +7,14 @@ export default function PublicacionCard({ publicacion }) {
   const [mostrarComentarios, setMostrarComentarios] = useState(false);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [comentarios, setComentarios] = useState(publicacion.comentarios);
+  const listaComentariosRef = useRef(null);
+
+  // Auto-scroll al último comentario cuando se agrega uno nuevo
+  useEffect(() => {
+    if (mostrarComentarios && listaComentariosRef.current) {
+      listaComentariosRef.current.scrollTop = listaComentariosRef.current.scrollHeight;
+    }
+  }, [comentarios.length, mostrarComentarios]);
 
   function enviarComentario() {
     const texto = nuevoComentario.trim();
@@ -54,22 +62,30 @@ export default function PublicacionCard({ publicacion }) {
       </button>
 
       {mostrarComentarios && (
-        <div className="mt-4 pt-4 border-t border-neutral-inactive flex flex-col gap-4">
-          {comentarios.map((c) => (
-            <div key={c.id} className="flex items-start gap-3">
-              <span className="w-7 h-7 rounded-full bg-neutral-inactive shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm">
-                  <span className="font-semibold text-brand-midnight">{c.autor}</span>
-                  <span className="text-brand-midnight/40 mx-1">•</span>
-                  <span className="text-brand-midnight/50">{c.fecha}</span>
-                </p>
-                <p className="text-brand-midnight/80">{c.texto}</p>
+        <div className="mt-4 pt-4 border-t border-neutral-inactive">
+          {/* Área con scroll interno: nunca crece más allá de max-h-64,
+              por más comentarios que se agreguen */}
+          <div
+            ref={listaComentariosRef}
+            className="flex flex-col gap-4 max-h-64 overflow-y-auto pr-2 mb-4"
+          >
+            {comentarios.map((c) => (
+              <div key={c.id} className="flex items-start gap-3">
+                <span className="w-7 h-7 rounded-full bg-neutral-inactive shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm">
+                    <span className="font-semibold text-brand-midnight">{c.autor}</span>
+                    <span className="text-brand-midnight/40 mx-1">•</span>
+                    <span className="text-brand-midnight/50">{c.fecha}</span>
+                  </p>
+                  <p className="text-brand-midnight/80">{c.texto}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
 
-          <div className="flex items-center gap-3 bg-neutral-inactive/30 rounded-xl px-4 py-2 mt-2">
+          {/* Fuera del área con scroll: siempre visible */}
+          <div className="flex items-center gap-3 bg-neutral-inactive/30 rounded-xl px-4 py-2">
             <input
               value={nuevoComentario}
               onChange={(e) => setNuevoComentario(e.target.value)}

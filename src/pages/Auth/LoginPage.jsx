@@ -3,7 +3,6 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Eye, EyeOff, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/images/logoOscuro.png";
-// Ajusta esta ruta al nombre real de tu ilustración dentro de assets
 import ilustracion from "../../assets/images/inicioGrupos.png";
 
 function matriculaTieneFormatoValido(m) {
@@ -23,7 +22,7 @@ export default function LoginPage() {
   const location = useLocation();
 
   // El segundo punto se "activa" en cuanto el usuario empieza a escribir,
-  // como en tu mockup (ambos puntos apagados solo en el estado inicial vacío).
+  // (ambos puntos apagados solo en el estado inicial vacío).
   const tocado = matricula.length > 0 || contrasena.length > 0;
 
   async function manejarSubmit(e) {
